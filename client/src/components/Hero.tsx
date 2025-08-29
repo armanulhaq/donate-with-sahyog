@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Hero = () => {
     const navigate = useNavigate();
+    const { user, loginWithRedirect } = useAuth0();
     return (
         <section className="py-30 xl:py-50 flex flex-col items-center justify-center px-10">
             <div className="grid xl:grid-cols-2 gap-12 items-center max-w-7xl">
@@ -27,7 +29,10 @@ const Hero = () => {
 
                     <div className="flex flex-col sm:flex-row gap-4 mt-10">
                         <Button
-                            onClick={() => navigate("/needs-your-support")}
+                            onClick={() => {
+                                if (user) navigate("/needs-your-support");
+                                else loginWithRedirect();
+                            }}
                             size="lg"
                             className="bg-primary text-white text-lg px-8 py-6 hover:bg-primary/90 duration-300 cursor-pointer rounded-sm"
                         >
