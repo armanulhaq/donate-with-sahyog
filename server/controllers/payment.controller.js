@@ -31,8 +31,8 @@ const createCheckoutSession = async (req, res) => {
                 },
             ],
             mode: "payment",
-            success_url: "http://localhost:5173/success",
-            cancel_url: "http://localhost:5173/cancel",
+            success_url: `http://localhost:5173/success?amount=${amount}&project=${project.funding_purpose}&area=${project.area}&district=${project.district}&state=${project.state}`,
+            cancel_url: `http://localhost:5173/failure?amount=${amount}&project=${project.funding_purpose}&area=${project.area}&district=${project.district}&state=${project.state}`,
         });
 
         res.status(200).json({ id: session.id });
