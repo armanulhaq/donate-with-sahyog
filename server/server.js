@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { getAllProjects } from "./controllers/db.controller.js";
+import donationRouter from "./routes/db.route.js";
 
 const app = express();
 app.use(cors());
@@ -9,7 +9,7 @@ app.get("/", (req, res) => {
     res.send("Sahyog is working");
 });
 
-app.get("/api/donation-projects", getAllProjects);
+app.use("/api", donationRouter);
 
 const PORT = process.env.PORT || 3000;
 

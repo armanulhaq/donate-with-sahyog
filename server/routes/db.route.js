@@ -1,8 +1,12 @@
 import express from "express";
-import { getAllProjects } from "../controllers/db.controller.js";
+import {
+    getAllProjects,
+    getProjectById,
+} from "../controllers/db.controller.js";
 
-const router = express.Router();
+const donationRouter = express.Router();
 
-router.get("/donation-projects", getAllProjects);
+donationRouter.get("/donation-projects", getAllProjects);
+donationRouter.get("/donation-project/:id", getProjectById);
 
-export default router;
+export default donationRouter;
