@@ -24,8 +24,15 @@ const SupportRegionPage = () => {
         const fetchProjects = async () => {
             setLoading(true);
             try {
+                const apiBase = import.meta.env
+                    .VITE_API_BASE_URL as string | undefined;
+                if (!apiBase) {
+                    throw new Error(
+                        "VITE_API_BASE_URL is not set. Please add it to client/.env"
+                    );
+                }
                 const response = await fetch(
-                    "http://localhost:3000/api/donation-projects"
+                    `${apiBase}/api/donation-projects`
                 );
                 const data = await response.json();
                 setProjects(data);

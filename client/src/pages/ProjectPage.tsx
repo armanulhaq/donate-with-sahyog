@@ -56,15 +56,23 @@ const ProjectPage = () => {
             // Ensuring publishable key is configured
             const publishableKey = import.meta.env
                 .VITE_STRIPE_PUBLISHABLE_KEY as string | undefined;
+            const apiBase = import.meta.env
+                .VITE_API_BASE_URL as string | undefined;
             if (!publishableKey) {
                 console.error(
                     "VITE_STRIPE_PUBLISHABLE_KEY is not set. Please add it to client/.env"
                 );
                 return;
             }
+            if (!apiBase) {
+                console.error(
+                    "VITE_API_BASE_URL is not set. Please add it to client/.env"
+                );
+                return;
+            }
 
             const res = await fetch(
-                "http://localhost:3000/payment/create-checkout-session",
+                `${apiBase}/payment/create-checkout-session`,
                 {
                     method: "POST",
                     headers: {
@@ -105,8 +113,15 @@ const ProjectPage = () => {
         const fetchProject = async () => {
             try {
                 setIsLoading(true);
+                const apiBase = import.meta.env
+                    .VITE_API_BASE_URL as string | undefined;
+                if (!apiBase) {
+                    throw new Error(
+                        "VITE_API_BASE_URL is not set. Please add it to client/.env"
+                    );
+                }
                 const res = await fetch(
-                    `http://localhost:3000/api/donation-project/${id}`
+                    `${apiBase}/api/donation-project/${id}`
                 );
                 if (!res.ok) {
                     throw new Error(`Failed to load project: ${res.status}`);
