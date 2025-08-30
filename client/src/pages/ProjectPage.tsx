@@ -1,4 +1,6 @@
 import Header from "@/components/Header";
+import ProjectPageSkeleton from "@/components/ProjectPageSkeleton";
+import { loadStripe } from "@stripe/stripe-js";
 import {
     MapPin,
     Phone,
@@ -40,6 +42,62 @@ const ProjectPage = () => {
     const [project, setProject] = useState<FullProject | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [amount, setAmount] = useState<string>("");
+    const [stripeLoading, setStripeLoading] = useState<boolean>(false);
+
+    const handleDonate = async () => {
+        // Validate amount before starting loading
+        const numericAmount = parseInt(amount, 10);
+        if (!numericAmount || numericAmount < 100) {
+            return;
+        }
+
+        setStripeLoading(true);
+        try {
+            // Ensure publishable key is configured
+            const publishableKey = import.meta.env
+                .VITE_STRIPE_PUBLISHABLE_KEY as string | undefined;
+            if (!publishableKey) {
+                console.error(
+                    "VITE_STRIPE_PUBLISHABLE_KEY is not set. Please add it to client/.env"
+                );
+                return;
+            }
+
+            const res = await fetch(
+                "http://localhost:3000/payment/create-checkout-session",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ amount: numericAmount, project }),
+                }
+            );
+
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(
+                    `Failed to create checkout session: ${res.status} ${text}`
+                );
+            }
+
+            const data = await res.json();
+            if (!data?.id) {
+                throw new Error("No session id returned from server");
+            }
+
+            const stripe = await loadStripe(publishableKey);
+            if (!stripe) {
+                throw new Error("Failed to initialize Stripe");
+            }
+
+            await stripe.redirectToCheckout({ sessionId: data.id });
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setStripeLoading(false);
+        }
+    };
 
     const fixedAmounts = [1000, 10000, 100000];
 
@@ -68,13 +126,7 @@ const ProjectPage = () => {
     const formatCurrency = (amt: number) => `₹${amt.toLocaleString("en-IN")}`;
 
     if (isLoading) {
-        return (
-            <div className="min-h-screen grid place-items-center">
-                <p className="text-base md:text-lg text-muted-foreground">
-                    Loading project details…
-                </p>
-            </div>
-        );
+        return <ProjectPageSkeleton />;
     }
 
     if (!project) {
@@ -144,16 +196,18 @@ const ProjectPage = () => {
                     <div className="space-y-10">
                         <Section
                             title="About This Project"
-                            icon={<Target className="h-5 w-5" />}
+                            icon={<Target className="h-5 w-5 text-primary" />}
                         >
-                            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+                            <p className="text-base md:text-md text-muted-foreground leading-relaxed">
                                 {project.long_description}
                             </p>
                         </Section>
 
                         <Section
                             title="Cost Breakdown"
-                            icon={<IndianRupee className="h-5 w-5" />}
+                            icon={
+                                <IndianRupee className="h-5 w-5 text-primary" />
+                            }
                         >
                             <div className="divide-y divide-border">
                                 {(Array.isArray(project.cost_breakdown)
@@ -183,7 +237,7 @@ const ProjectPage = () => {
 
                         <Section
                             title="Get In Touch"
-                            icon={<Phone className="h-5 w-5" />}
+                            icon={<Phone className="h-5 w-5 text-primary" />}
                         >
                             <div className="space-y-4">
                                 <ContactItem
@@ -220,7 +274,7 @@ const ProjectPage = () => {
 
                             <div className="flex flex-col gap-6">
                                 {/* Stats */}
-                                <div className="p-4 rounded-lg border border-border bg-background">
+                                <div className="p-4 rounded-lg border border-border bg-background ">
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <p className="text-sm text-muted-foreground flex items-center gap-2">
@@ -255,7 +309,7 @@ const ProjectPage = () => {
                                         {fixedAmounts.map((amt) => (
                                             <button
                                                 key={amt}
-                                                className="flex items-center justify-center gap-2 p-3 rounded-lg border border-border bg-secondary hover:bg-accent transition"
+                                                className="flex items-center justify-center gap-2 p-3 rounded-lg border border-border bg-secondary hover:bg-primary/20 transition cursor-pointer"
                                                 type="button"
                                                 onClick={() =>
                                                     setAmount(String(amt))
@@ -290,6 +344,7 @@ const ProjectPage = () => {
                                         className="w-full px-4 py-3 rounded-lg border border-input bg-card text-foreground placeholder:text-muted-foreground/80"
                                     />
                                     <button
+                                        onClick={handleDonate}
                                         className="w-full mt-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition disabled:opacity-60"
                                         type="button"
                                         disabled={
@@ -303,9 +358,13 @@ const ProjectPage = () => {
                                         {amount &&
                                         !Number.isNaN(parseInt(amount, 10)) &&
                                         parseInt(amount, 10) >= 100
-                                            ? `Donate ${formatCurrency(
-                                                  parseInt(amount, 10)
-                                              )}`
+                                            ? `${
+                                                  stripeLoading
+                                                      ? "Processing..."
+                                                      : `Donate ${formatCurrency(
+                                                            parseInt(amount, 10)
+                                                        )}`
+                                              }`
                                             : "Enter amount to donate"}
                                     </button>
                                 </div>
