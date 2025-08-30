@@ -45,7 +45,7 @@ const ProjectPage = () => {
     const [stripeLoading, setStripeLoading] = useState<boolean>(false);
 
     const handleDonate = async () => {
-        // Validate amount before starting loading
+        // Validating amount before starting loading
         const numericAmount = parseInt(amount, 10);
         if (!numericAmount || numericAmount < 100) {
             return;
@@ -53,7 +53,7 @@ const ProjectPage = () => {
 
         setStripeLoading(true);
         try {
-            // Ensure publishable key is configured
+            // Ensuring publishable key is configured
             const publishableKey = import.meta.env
                 .VITE_STRIPE_PUBLISHABLE_KEY as string | undefined;
             if (!publishableKey) {

@@ -37,11 +37,11 @@ const SupportCard = ({ project }: { project: Project }) => {
             </div>
 
             <div className="p-5">
-                <h3 className="font-bold text-lg text-card-foreground mb-1 line-clamp-2">
+                <h3 className="font-bold text-lg text-card-foreground line-clamp-2">
                     {project.funding_purpose}
                 </h3>
                 <div className="flex items-center text-xs mb-2 text-primary">
-                    <MapPin className="w-4 h-4 mr-1" />
+                    <MapPin className="w-3 h-3 mr-1" />
                     <span>
                         {project.area}, {project.district}, {project.state}
                     </span>
@@ -90,7 +90,9 @@ const SupportCard = ({ project }: { project: Project }) => {
                     onClick={() => {
                         navigate(`/project/${project.id}`);
                     }}
-                    className="w-full cursor-pointer bg-primary hover:bg-primary/90 text-white font-medium py-2 px-4 rounded-sm transition-colors duration-200 flex items-center justify-center"
+                    className={`w-full cursor-pointer bg-primary ${
+                        project.active ? "" : "cursor-not-allowed opacity-50"
+                    } hover:bg-primary/90 text-white font-medium py-2 px-4 rounded-sm transition-colors duration-200 flex items-center justify-center`}
                 >
                     <TrendingUp className="w-4 h-4 mr-2" />
                     Support Project
