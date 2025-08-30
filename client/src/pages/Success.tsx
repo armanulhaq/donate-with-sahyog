@@ -40,12 +40,12 @@ const PaymentSuccess = () => {
                 <div className="flex justify-center gap-4">
                     <Button
                         onClick={() => navigate("/")}
-                        className="bg-primary hover:bg-primary/80 text-white p-6 rounded-sm text-lg font-semibold shadow-md cursor-pointer"
+                        className="bg-primary hover:bg-primary/80 text-white p-5 lg:p-6 rounded-sm text-md lg:text-lg font-semibold shadow-md cursor-pointer"
                     >
                         Back to Home
                     </Button>
                     <Button
-                        className="cursor-pointer p-6 rounded-sm text-lg font-semibold border shadow-md"
+                        className="cursor-pointer lg:p-6 p-5 rounded-sm text-md lg:text-lg font-semibold border shadow-md"
                         variant="outline"
                         onClick={() => navigate("/needs-your-support")}
                     >

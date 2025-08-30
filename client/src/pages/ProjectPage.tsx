@@ -131,7 +131,7 @@ const ProjectPage = () => {
 
     if (!project) {
         return (
-            <div className="min-h-screen grid place-items-center">
+            <div className="min-h-screen bg-background grid place-items-center">
                 <h2 className="text-2xl font-bold text-foreground">
                     Project Not Found
                 </h2>
@@ -155,7 +155,7 @@ const ProjectPage = () => {
             : 0;
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen bg-background">
             <Header />
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
                 <div className="lg:col-span-2 relative rounded-xl overflow-hidden group mb-10">
@@ -227,7 +227,7 @@ const ProjectPage = () => {
                                     </div>
                                 ))}
                             </div>
-                            <div className="flex justify-between mt-4 font-semibold text-foreground">
+                            <div className="flex justify-between mt-4 pt-3 border-t border-border font-semibold text-foreground">
                                 <span>Total Project Cost</span>
                                 <span className="text-primary">
                                     {formatCurrency(project.goal_amount)}
@@ -241,18 +241,24 @@ const ProjectPage = () => {
                         >
                             <div className="space-y-4">
                                 <ContactItem
-                                    icon={<Users className="h-4 w-4" />}
+                                    icon={
+                                        <Users className="h-4 w-4 text-primary" />
+                                    }
                                     label={project.contact_person_name}
                                     subLabel="Project Lead"
                                 />
                                 <ContactItem
-                                    icon={<Mail className="h-4 w-4" />}
+                                    icon={
+                                        <Mail className="h-4 w-4 text-primary" />
+                                    }
                                     label={project.contact_person_email}
                                     subLabel="Email Address"
                                     link={`mailto:${project.contact_person_email}`}
                                 />
                                 <ContactItem
-                                    icon={<Phone className="h-4 w-4" />}
+                                    icon={
+                                        <Phone className="h-4 w-4 text-primary" />
+                                    }
                                     label={`+91 ${project.contact_person_phone}`}
                                     subLabel="Phone Number"
                                     link={`tel:${project.contact_person_phone}`}
@@ -262,10 +268,10 @@ const ProjectPage = () => {
                     </div>
 
                     <div>
-                        <section className="flex flex-col p-6 rounded-xl border border-border bg-card">
+                        <section className="flex flex-col p-6 rounded-xl border border-border bg-card shadow-sm">
                             <div className="flex items-center mb-6">
-                                <div className="p-3 rounded-full bg-secondary">
-                                    <HandHelping className="h-6 w-6 text-foreground" />
+                                <div className="p-3 rounded-full bg-secondary border border-border">
+                                    <HandHelping className="h-6 w-6 text-primary" />
                                 </div>
                                 <h2 className="ml-3 text-2xl font-bold text-foreground">
                                     Support This Project
@@ -274,7 +280,7 @@ const ProjectPage = () => {
 
                             <div className="flex flex-col gap-6">
                                 {/* Stats */}
-                                <div className="p-4 rounded-lg border border-border bg-background ">
+                                <div className="p-4 rounded-lg border border-border bg-muted">
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
                                             <p className="text-sm text-muted-foreground flex items-center gap-2">
@@ -309,14 +315,18 @@ const ProjectPage = () => {
                                         {fixedAmounts.map((amt) => (
                                             <button
                                                 key={amt}
-                                                className="flex items-center justify-center gap-2 p-3 rounded-lg border border-border bg-secondary hover:bg-primary/20 transition cursor-pointer"
+                                                className={`flex items-center justify-center gap-2 p-3 rounded-lg border transition cursor-pointer ${
+                                                    amount === String(amt)
+                                                        ? "border-primary bg-secondary text-primary"
+                                                        : "border-border bg-card hover:bg-secondary hover:border-primary text-foreground"
+                                                }`}
                                                 type="button"
                                                 onClick={() =>
                                                     setAmount(String(amt))
                                                 }
                                             >
                                                 <Heart className="h-4 w-4 text-primary" />
-                                                <span className="font-semibold text-foreground">
+                                                <span className="font-semibold">
                                                     {formatCurrency(amt)}
                                                 </span>
                                             </button>
@@ -341,18 +351,19 @@ const ProjectPage = () => {
                                         }
                                         placeholder="Enter amount"
                                         min="100"
-                                        className="w-full px-4 py-3 rounded-lg border border-input bg-card text-foreground placeholder:text-muted-foreground/80"
+                                        className="w-full px-4 py-3 rounded-lg border border-border bg-input text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                     />
                                     <button
                                         onClick={handleDonate}
-                                        className="w-full mt-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition disabled:opacity-60 cursor-pointer"
+                                        className="w-full mt-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                         type="button"
                                         disabled={
                                             !amount ||
                                             Number.isNaN(
                                                 parseInt(amount, 10)
                                             ) ||
-                                            parseInt(amount, 10) < 100
+                                            parseInt(amount, 10) < 100 ||
+                                            stripeLoading
                                         }
                                     >
                                         {amount &&
@@ -379,11 +390,11 @@ const ProjectPage = () => {
                                         </span>
                                     </div>
                                     <div
-                                        className="h-3 w-full rounded-full bg-muted overflow-hidden"
+                                        className="h-3 w-full rounded-full bg-muted border border-border overflow-hidden"
                                         aria-hidden
                                     >
                                         <div
-                                            className="h-3 rounded-full bg-primary"
+                                            className="h-full rounded-full bg-primary transition-all duration-500"
                                             style={{ width: `${progress}%` }}
                                             role="progressbar"
                                             aria-valuenow={progress}
@@ -413,12 +424,12 @@ const Section = ({
 }) => (
     <section className="space-y-4">
         <div className="flex items-center gap-3">
-            <div className="p-2 rounded-full bg-secondary text-foreground">
+            <div className="p-2 rounded-full bg-secondary border border-border">
                 {icon}
             </div>
             <h2 className="text-xl font-bold text-foreground">{title}</h2>
         </div>
-        <div className="p-6 rounded-xl border border-border bg-card">
+        <div className="p-6 rounded-xl border border-border bg-card shadow-sm">
             {children}
         </div>
     </section>
@@ -436,14 +447,14 @@ const ContactItem = ({
     link?: string;
 }) => (
     <div className="flex items-start gap-3">
-        <div className="p-2 rounded-full bg-secondary text-foreground">
+        <div className="p-2 rounded-full bg-secondary border border-border">
             {icon}
         </div>
         <div>
             {link ? (
                 <a
                     href={link}
-                    className="font-medium text-foreground hover:opacity-80 transition"
+                    className="font-medium text-foreground hover:text-primary transition"
                 >
                     {label}
                 </a>

@@ -9,7 +9,7 @@ const Hero = () => {
         <section className="py-30 xl:py-50 flex flex-col items-center justify-center px-10">
             <div className="grid xl:grid-cols-2 gap-12 items-center max-w-7xl">
                 <div className="space-y-3">
-                    <div className="bg-card border border-primary text-sm md:text-md font-sm w-fit xl:px-4 px-2 py-1 rounded-xl">
+                    <div className="bg-card border border-primary text-xs md:text-md font-sm w-fit xl:px-4 px-2 py-1 rounded-xl">
                         🇮🇳 Empowering Every Corner
                     </div>
 

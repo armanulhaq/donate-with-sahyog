@@ -4,22 +4,22 @@
 
 :root {
     --radius: 0.625rem;
-    --background: #ffeef2; /* Your custom background color */
-    --foreground: #231f20;
-    --card: #fff3f0;
-    --card-foreground: #231f20;
-    --primary: #fb6376; /* Example pink primary */
+    --background: #faf8f3;
+    --foreground: #1a1a1a;
+    --card: #f4f1e8;
+    --card-foreground: #1a1a1a;
+    --primary: #2d5016;
     --primary-foreground: #ffffff;
-    --secondary: #fce7f3;
-    --secondary-foreground: #231f20;
-    --muted: #f9fafb;
+    --secondary: #dde7c7;
+    --secondary-foreground: #ffffff;
+    --muted: #f8f6f0;
     --muted-foreground: #6b7280;
-    --accent: #fce7f3;
-    --accent-foreground: #231f20;
-    --destructive: #ef4444;
-    --border: #e5e7eb;
-    --input: #e5e7eb;
-    --ring: #d946ef;
+    --accent: #e8f5e8;
+    --accent-foreground: #1a1a1a;
+    --destructive: #dc2626;
+    --border: #e2ddd4;
+    --input: #e2ddd4;
+    --ring: #2d5016;
 }
 
 @theme inline {
