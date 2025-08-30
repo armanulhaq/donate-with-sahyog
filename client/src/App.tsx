@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import NeedYourSupport from "./pages/NeedYourSupport";
 import ProjectPage from "./pages/ProjectPage";
 import Success from "./pages/Success";
+import PaymentFailure from "./pages/Failure";
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                 />
                 <Route path="/project/:id" element={<ProjectPage />} />
                 <Route path="/success" element={<Success />} />
+                <Route path="/failure" element={<PaymentFailure />} />
             </Routes>
         </>
     );

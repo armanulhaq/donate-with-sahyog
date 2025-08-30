@@ -345,7 +345,7 @@ const ProjectPage = () => {
                                     />
                                     <button
                                         onClick={handleDonate}
-                                        className="w-full mt-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition disabled:opacity-60"
+                                        className="w-full mt-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:opacity-90 transition disabled:opacity-60 cursor-pointer"
                                         type="button"
                                         disabled={
                                             !amount ||
